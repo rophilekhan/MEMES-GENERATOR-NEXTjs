@@ -15,10 +15,10 @@ const page = async () => {
 
   return (
     <>
-      <h1 className="text-center mb-10 font-bold text-5xl text-white bg-black">Memes Generator</h1>
-      <marquee className='text-xl text-white bg-black'>
+      <h1 className="text-center mb-3 font-bold text-5xl text-white bg-black">Memes Generator</h1>
+      <p className='text-center mb-10 text-xl text-white bg-black font-bold '>
         Do you want to Generate Memes Plaease Click on it 
-      </marquee>
+      </p>
       <div className="flex justify-center gap-20 flex-wrap bg-black">
         {
           response ? (
