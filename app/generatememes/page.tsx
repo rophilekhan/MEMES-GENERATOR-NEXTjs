@@ -1,136 +1,78 @@
-"use client"
-import React, { useEffect, useRef, useState } from 'react'
+"use client";
 import Image from 'next/image';
+import React, { useState, useRef } from 'react';
+import { toPng } from 'html-to-image';
 
-const Generate = ({ params }: { params: { id: number, url: string, boxCount: number } }) => {
+interface Meme {
+    id: string;
+    url: string;
+}
 
-    console.log(params);
+const CreateMeme = ({ searchParams }: { searchParams: Meme }) => {
+    const [topText, setTopText] = useState("");
+    const [bottomText, setBottomText] = useState("");
+    const memeRef = useRef<HTMLDivElement>(null);
 
-    const [hello, setHello] = useState(params.boxCount)
-    const [meme, setmeme] = useState<string | null>(null)
+    const handleSaveMeme = async () => {
+        if (memeRef.current === null) {
+            return;
+        }
 
-    let input1 = useRef<HTMLInputElement>(null);
-    let input2 = useRef<HTMLInputElement>(null);
-    let input3 = useRef<HTMLInputElement>(null);
-    let input4 = useRef<HTMLInputElement>(null);
-
-    const postMeme = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-
-        console.log(input1.current?.value);
-
-        const data = await fetch(`https://api.imgflip.com/caption_image?template_id=${params.id}&username=TalhaZahid&password=hello-world&text0=${input1.current?.value}&text1=${input2.current?.value}&text2=${input3.current?.value}&text3=${input4.current?.value}
-            `, {
-            method: 'POST',
-        });
-        const response = await data.json()
-        console.log(response);
-        setmeme(response.data.url)
-
-    }
-
-    useEffect(() => {
-        setHello(params.boxCount)
-    }, [params.boxCount])
+        try {
+            const dataUrl = await toPng(memeRef.current);
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = 'meme.png';
+            link.click();
+        } catch (err) {
+            console.error('Failed to save meme', err);
+        }
+    };
 
     return (
         <>
-            <div className='flex justify-center'>
-                <Image
-                    src={params.url}
-                    width={200}
-                    height={200}
-                    alt="error"
-                    className="mb-4 rounded-lg shadow-sm"
-                />
+            <div className="min-h-screen flex flex-col items-center mt-5 justify-center p-8 text-black">
+                <h1 className="text-4xl font-bold text-white mb-8">Edit Your Meme</h1>
+
+                <div className="relative w-full max-w-md" ref={memeRef}>
+                    <Image src={searchParams.url} alt="Meme" width={400} height={400} className="rounded-lg" />
+                    {/* Top Text */}
+                    <div className="absolute top-4 left-18 right-16 text-center text-2xl font-bold drop-shadow-lg uppercase">
+                        {topText}
+                    </div>
+                    {/* Bottom Text */}
+                    <div className="absolute bottom-4 left-18 right-16 text-center text-2xl font-bold drop-shadow-lg uppercase">
+                        {bottomText}
+                    </div>
+                </div>
+
+                <div className="flex flex-col md:flex-row justify-center items-center mt-8 gap-4">
+                    {/* Top Text Input */}
+                    <input
+                        type="text"
+                        placeholder="Top Text"
+                        value={topText}
+                        onChange={(e) => setTopText(e.target.value)}
+                        className="border border-gray-300 rounded p-2 w-full max-w-xs"
+                    />
+                    {/* Bottom Text Input */}
+                    <input
+                        type="text"
+                        placeholder="Bottom Text"
+                        value={bottomText}
+                        onChange={(e) => setBottomText(e.target.value)}
+                        className="border border-gray-300 rounded p-2 w-full max-w-xs"
+                    />
+                </div>
+
+                <button 
+                    onClick={handleSaveMeme} 
+                    className="mt-6 bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors">
+                    Save Meme
+                </button>
             </div>
-            {hello == 2 ? (
-                <div>
-                    <form onSubmit={postMeme}>
-                        <input
-                            type="text"
-                            placeholder='Type Your Content'
-                            className='input input-bordered input-accent w-full max-w-xs'
-                            ref={input1} />
-                        <br />
-                        <br />
-                        <input
-                            type="text"
-                            placeholder='Type Your Content'
-                            className='input input-bordered input-accent w-full max-w-xs'
-                            ref={input2} />
-                        <br />
-                        <br />
-                        <button type="submit" className="btn btn-primary">Generate Meme</button>
-                    </form>
-                </div>
-            ) : hello == 3 ? (
-                <div>
-                    <form onSubmit={postMeme}>
-                        <input
-                            type="text"
-                            placeholder='Type Your Content'
-                            className='input input-bordered input-accent w-full max-w-xs'
-                            ref={input1} />
-                        <br />
-                        <br />
-                        <input
-                            type="text"
-                            placeholder='Type Your Content'
-                            className='input input-bordered input-accent w-full max-w-xs'
-                            ref={input2} />
-                        <br />
-                        <br />
-                        <input
-                            type="text"
-                            placeholder='Type Your Content'
-                            className='input input-bordered input-accent w-full max-w-xs'
-                            ref={input3} />
-                        <br />
-                        <br />
-                        <button type="submit" className="btn btn-primary">Generate Meme</button>
-                    </form>
-                </div>
-            ) : hello == 4 ? (
-                <div>
-                    <form onSubmit={postMeme}>
-                        <input
-                            type="text"
-                            placeholder='Type Your Content'
-                            className='input input-bordered input-accent w-full max-w-xs'
-                            ref={input1} />
-                        <br />
-                        <br />
-                        <input
-                            type="text"
-                            placeholder='Type Your Content'
-                            className='input input-bordered input-accent w-full max-w-xs'
-                            ref={input2} />
-                        <br />
-                        <br />
-                        <input
-                            type="text"
-                            placeholder='Type Your Content'
-                            className='input input-bordered input-accent w-full max-w-xs'
-                            ref={input3} />
-                        <br />
-                        <br />
-                        <input
-                            type="text"
-                            placeholder='Type Your Content'
-                            className='input input-bordered input-accent w-full max-w-xs'
-                            ref={input4} />
-                        <br />
-                        <br />
-                        <button type="submit" className="btn btn-primary">Generate Meme</button>
-                    </form>
-                </div>
-            ) : (
-                <div> Loading Please Wait....</div>
-            )}
-            {meme ? <Image src={meme} width={200} height={200} alt='Loading Please Wait..' /> : null}
         </>
-    )
+    );
 }
 
-export default Generate
+export default CreateMeme;
