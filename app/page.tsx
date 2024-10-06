@@ -15,30 +15,33 @@ const page = async () => {
 
   return (
     <>
-      <h1 className='text-center text-xl mb-10'>Memes Generator</h1>
-      <div className='flex justify-center gap-20 flex-wrap'>
+      <h1 className="text-center mb-10 font-bold text-5xl text-white bg-black">Memes Generator</h1>
+      <marquee className='text-xl text-white bg-black'>
+        Do you want to Generate Memes Plaease Click on it 
+      </marquee>
+      <div className="flex justify-center gap-20 flex-wrap bg-black">
         {
           response ? (
             response.data.memes.map((item: Meme) => {
               return (
                 <div
                   key={item.id}
-                  className="flex flex-col items-center p-6 text-center border-4 border-black rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-white"
+                  className="flex flex-col items-center p-6 text-center border-4 border-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-black"
                 >
                   <div className="flex justify-center mb-4">
                     <Image
                       src={item.url}
-                      width={200}
-                      height={200}
+                      width={300}
+                      height={300}
                       alt="error"
-                      className="mb-4 rounded-lg shadow-sm"
+                      className="mb-4 rounded-lg shadow-sm border-white"
                     />
                   </div>
-                  <button className="btn btn-accent">
+                  <button className="btn btn-primary bg-red-600 text-black">
                     <Link
                       className="w-full"
                       href={{
-                        pathname: "generatememe/",
+                        pathname: "generatememes/",
                         query: {
                           url: item.url,
                           boxCount: item.box_count,
@@ -52,9 +55,7 @@ const page = async () => {
                 </div>
               );
             })
-          ) : (
-            <div>No memes available.</div>
-          )
+          ) : <h1 className="text-white">Loading Please Wait</h1>
         }
       </div>
     </>

@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.dark {
+    background-color: #000; /* or any other dark background color you prefer */
+    color: #fff; /* or any other light text color you prefer */
+  }
+  
+  .dark a {
+    color: #fff; /* adjust link color to contrast with dark background */
+  }
+  
+  .dark a:hover {
+    color: #ccc; /* adjust link hover color to contrast with dark background */
+  }
